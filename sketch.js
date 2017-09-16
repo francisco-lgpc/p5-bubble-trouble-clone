@@ -1,9 +1,13 @@
 var ball;
 var me;
+var LEFT = 0;
+var RIGHT = 1
+
+
 function setup() {
 	createCanvas(1200, 800);
 	background(125);
-	me = new Element(width/2, height - 50, 50);
+	me = new Player();
 	ball = new Ball(100, 100, 100, 1);
 }
 
@@ -15,5 +19,5 @@ function draw() {
 	if (ball.hitFloor()) {
 		ball.bounce();
 	}
-	console.log(ball.pos.y);
+	me.update()
 }
