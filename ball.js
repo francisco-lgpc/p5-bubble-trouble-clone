@@ -14,7 +14,15 @@ function Ball(x, y, r, v) {
 		this.vel.y *= .98
 	}
 
+	this.bounceEdge = function () {
+		this.vel.x *= -1
+	}
+
 	this.hitFloor = function () {
 		return this.pos.y + this.r >= height;
+	}
+
+	this.hitEdge = function() {
+		return this.pos.x + this.r > width || this.pos.x - this.r < 0;
 	}
 }
