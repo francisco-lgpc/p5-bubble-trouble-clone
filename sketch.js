@@ -41,8 +41,10 @@ function draw() {
 			if (arrows[arrows.length - 1] && balls[i].intersects(arrows[arrows.length - 1])) {
 				arrows[arrows.length - 1].active = false
 				arrows.splice(arrows.length - 1, 1);
-				balls.push(new Ball(balls[i].pos.x, balls[i].pos.y, balls[i].r * .5, 1, -3));
-				balls.push(new Ball(balls[i].pos.x, balls[i].pos.y, balls[i].r * .5, -1, -3));
+				if (balls[i].r > 6.25) {
+					balls.push(new Ball(balls[i].pos.x, balls[i].pos.y, balls[i].r * .5, 1, -3));
+					balls.push(new Ball(balls[i].pos.x, balls[i].pos.y, balls[i].r * .5, -1, -3));
+				}
 				balls.splice(i, 1);
 			}
 		}
