@@ -1,1 +1,34 @@
-style.css
+html, body {
+  height: 100%;
+}
+
+body {
+	padding: 0;
+	margin: 0;
+}
+.wrapper {
+  margin: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.wrapper-canvas {
+	margin: 0 0 50px 0;
+	position: relative;
+}
+
+.btn-restart {
+	position: absolute;
+	top: calc(50% - 10px);%;
+	left: calc(50% - 150px);
+	width: 300px;
+	padding: 20px;
+}
+
+.canvas {
+	height: auto !important;
+	width: 80% !important;	
+}
+input {
+	margin-left: 30px;
+}
