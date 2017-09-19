@@ -9,8 +9,8 @@ function setup() {
 	createCanvas(1200, 800);
 	background(125);
 	player = new Player();
-	for (var i = 0; i < 3; i++) {
-		balls.push(new Ball(100 + i * 300, 100, 100, (-1)**i));
+	for (var i = 0; i < 10; i++) {
+		balls.push(new Ball(100 + i * 100, 100 - i*10, 100 - i*10, (-1)**i));
 	}
 }
 
@@ -22,7 +22,7 @@ function draw() {
 		balls[i].show()
 		balls[i].update()
 		if (balls[i].hitFloor()) {
-			balls[i].bounce();
+			balls[i].bounce(balls[i].r);
 		}
 		if (balls[i].hitEdge()) {
 			balls[i].bounceEdge();

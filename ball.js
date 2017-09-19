@@ -9,9 +9,8 @@ function Ball(x, y, r, v) {
 		this.vel.add(this.acc);		
 	}
 
-	this.bounce = function() {
-		this.vel.y *= -1
-		this.vel.y *= .98
+	this.bounce = function(r) {
+		this.vel.y = -r * 0.07 - 3.5;
 	}
 
 	this.bounceEdge = function () {
