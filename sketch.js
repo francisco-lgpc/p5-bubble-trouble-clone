@@ -19,5 +19,25 @@ function draw() {
 	if (ball.hitFloor()) {
 		ball.bounce();
 	}
+
+	if (keyIsDown(LEFT_ARROW)) {
+		console.log('left');
+		me.move(LEFT);
+	} else if (keyIsDown(RIGHT_ARROW)) {
+		console.log('right');
+		me.move(RIGHT);		
+	}
+
 	me.update()
+
 }
+
+// function keyPressed() {
+// 	if (keyCode === LEFT_ARROW){
+// 		console.log('left');
+// 		me.move(LEFT);
+// 	} else if (keyCode == RIGHT_ARROW) {
+// 		console.log('right');
+// 		me.move(RIGHT);
+// 	}
+// }
