@@ -7,7 +7,6 @@ function Player() {
 	this.update = function () {
 		if (this.acc.x === 0 && this.vel.x !== 0) {
 			this.drag();
-			console.log('drag');
 		}
 		this.pos.add(this.vel);
 		this.vel.add(this.acc);
@@ -24,7 +23,6 @@ function Player() {
 
 		if (this.acc.x * this.vel.x < 0) {
 			this.break();
-			console.log('break');
 		}
 	}
 
