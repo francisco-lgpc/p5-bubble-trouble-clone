@@ -38,7 +38,7 @@ function draw() {
 			balls[i].show();
 			balls[i].update();
 
-			if (arrows[arrows.length - 1] && balls[i].intersects(arrows[arrows.length - 1])) {
+			if (arrows[arrows.length - 1] && arrows[arrows.length - 1].intersects(balls[i])) {
 				arrows[arrows.length - 1].active = false
 				arrows.splice(arrows.length - 1, 1);
 				if (balls[i].r > 6.25) {

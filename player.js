@@ -14,6 +14,8 @@ function Player() {
 		this.pos.add(this.vel);
 		this.vel.add(this.acc);
 
+		this.pos.x = constrain(this.pos.x, 0 + this.r, width - this.r);
+
 		this.acc.mult(0)		
 	}
 

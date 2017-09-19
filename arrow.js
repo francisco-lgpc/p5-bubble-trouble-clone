@@ -28,4 +28,13 @@ function Arrow(x, y) {
 	this.hitTop = function () {
 		return this.pos.y < 0;
 	}
+
+	this.intersects = function (other) {
+		if (abs(other.pos.x - this.pos.x) <= other.r && other.pos.y + other.r > this.pos.y) {
+			return true;
+		}
+
+		return this.pos.dist(other.pos) < this.r + other.r
+
+	}
 }
