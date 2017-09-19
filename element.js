@@ -7,6 +7,7 @@ function Element(x, y, r) {
 	this.show = function () {
 		fill(this.color);
 		stroke(this.strokeColor);
+		strokeWeight(1);
 
 		ellipse(this.pos.x, this.pos.y, this.r*2, this.r*2);
 	}

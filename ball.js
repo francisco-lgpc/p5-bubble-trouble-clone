@@ -1,7 +1,7 @@
-function Ball(x, y, r, v) {
+function Ball(x, y, r, vx, vy) {
 	Element.call(this, x, y, r);
 
-	this.vel = createVector(v, 0);
+	this.vel = createVector(vx, vy);
 	this.acc = createVector(0, 0.1);
 
 	this.update = function () {

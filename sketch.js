@@ -13,8 +13,8 @@ function setup() {
 	createCanvas(1200, 800);
 	background(125);
 	player = new Player();
-	for (var i = 0; i < 10; i++) {
-		balls.push(new Ball(100 + i * 100, 100 - i*10, 100 - i*10, (-1)**i));
+	for (var i = 0; i < 3; i++) {
+		balls.push(new Ball(100 + i * 300, 100, 100, (-1)**i));
 	}
 }
 
@@ -31,17 +31,20 @@ function draw() {
 			if (balls[i].hitEdge()) {
 				balls[i].bounceEdge();
 			}
-			if (arrows[arrows.length - 1] && balls[i].intersects(arrows[arrows.length - 1])) {
-				arrows[arrows.length - 1].active = false
-				arrows.splice(arrows.length - 1, 1);
-				balls[i].r *= .5;
-			}
 			if (balls[i].intersects(player)) {
 				gameOver = true;
 				balls[i].strokeColor = color(255, 0, 0);
 			}
 			balls[i].show();
 			balls[i].update();
+
+			if (arrows[arrows.length - 1] && balls[i].intersects(arrows[arrows.length - 1])) {
+				arrows[arrows.length - 1].active = false
+				arrows.splice(arrows.length - 1, 1);
+				balls.push(new Ball(balls[i].pos.x, balls[i].pos.y, balls[i].r * .5, 1, -3));
+				balls.push(new Ball(balls[i].pos.x, balls[i].pos.y, balls[i].r * .5, -1, -3));
+				balls.splice(i, 1);
+			}
 		}
 
 		if (arrows[arrows.length - 1] && arrows[arrows.length - 1].active) {
