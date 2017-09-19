@@ -4,6 +4,9 @@ function Player() {
 	this.vel = createVector(0, 0);
 	this.acc = createVector(0, 0);
 
+	this.color = color(30, 20, 223);
+	this.strokeColor = color(0, 0);
+
 	this.update = function () {
 		if (this.acc.x === 0 && this.vel.x !== 0) {
 			this.drag();

@@ -1,5 +1,7 @@
-var LEFT = 0;
+var LEFT  = 0;
 var RIGHT = 1
+
+var gameOver = false
 
 var balls = [];
 var ball;
@@ -17,39 +19,46 @@ function setup() {
 }
 
 function draw() {
-	background(125);
+	if (gameOver) {
 
-	for (var i = balls.length - 1; i >= 0; i--) {
-		balls[i].show();
-		balls[i].update();
-		if (balls[i].hitFloor()) {
-			balls[i].bounce(balls[i].r);
+	} else {
+		background(125);
+
+		for (var i = balls.length - 1; i >= 0; i--) {
+			if (balls[i].hitFloor()) {
+				balls[i].bounce(balls[i].r);
+			}
+			if (balls[i].hitEdge()) {
+				balls[i].bounceEdge();
+			}
+			if (arrows[arrows.length - 1] && balls[i].intersects(arrows[arrows.length - 1])) {
+				arrows[arrows.length - 1].active = false
+				arrows.splice(arrows.length - 1, 1);
+				balls[i].r *= .5;
+			}
+			if (balls[i].intersects(player)) {
+				gameOver = true;
+				balls[i].strokeColor = color(255, 0, 0);
+			}
+			balls[i].show();
+			balls[i].update();
 		}
-		if (balls[i].hitEdge()) {
-			balls[i].bounceEdge();
+
+		if (arrows[arrows.length - 1] && arrows[arrows.length - 1].active) {
+			arrows[arrows.length - 1].update();
+			arrows[arrows.length - 1].show();		
 		}
 
-		if (arrows[arrows.length - 1] && balls[i].intersects(arrows[arrows.length - 1])) {
-			arrows[arrows.length - 1].active = false
-			arrows.splice(arrows.length - 1, 1);
-			balls[i].r *= .5;
+		player.show();
+
+		if (keyIsDown(LEFT_ARROW)) {
+			player.move(LEFT);
+		} else if (keyIsDown(RIGHT_ARROW)) {
+			player.move(RIGHT);		
 		}
+
+		player.update();
 	}
-
-	if (arrows[arrows.length - 1] && arrows[arrows.length - 1].active) {
-		arrows[arrows.length - 1].update();
-		arrows[arrows.length - 1].show();		
-	}
-
-	player.show();
-
-	if (keyIsDown(LEFT_ARROW)) {
-		player.move(LEFT);
-	} else if (keyIsDown(RIGHT_ARROW)) {
-		player.move(RIGHT);		
-	}
-
-	player.update();
 }
 
 function keyPressed() {
