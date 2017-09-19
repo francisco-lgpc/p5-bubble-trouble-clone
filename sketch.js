@@ -13,7 +13,7 @@ function setup() {
 	createCanvas(1200, 800);
 	background(125);
 	player = new Player();
-	for (var i = 0; i < 3; i++) {
+	for (var i = 0; i < 1; i++) {
 		balls.push(new Ball(100 + i * 300, 100, 100, (-1)**i));
 	}
 }
@@ -38,7 +38,7 @@ function draw() {
 			balls[i].show();
 			balls[i].update();
 
-			if (arrows[arrows.length - 1] && arrows[arrows.length - 1].intersects(balls[i])) {
+			if (arrows[arrows.length - 1] && arrows[arrows.length - 1].active && arrows[arrows.length - 1].intersects(balls[i])) {
 				arrows[arrows.length - 1].active = false
 				arrows.splice(arrows.length - 1, 1);
 				if (balls[i].r > 6.25) {
