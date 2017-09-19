@@ -4,10 +4,12 @@ function Element(x, y, r) {
 
 	this.show = function () {
 		fill(0);
-		ellipse(this.pos.x, this.pos.y, r*2, r*2);
+		stroke(0);
+
+		ellipse(this.pos.x, this.pos.y, this.r*2, this.r*2);
 	}
 
 	this.intersects = function (other) {
-		this.pos.dist(other.pos) < this.r + other.r
+		return this.pos.dist(other.pos) < this.r + other.r
 	}
 }

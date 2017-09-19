@@ -1,9 +1,11 @@
-var ball;
-var balls = [];
-var player;
 var LEFT = 0;
 var RIGHT = 1
 
+var balls = [];
+var ball;
+var player;
+var arrows = [];
+var arrow;
 
 function setup() {
 	createCanvas(1200, 800);
@@ -16,18 +18,30 @@ function setup() {
 
 function draw() {
 	background(125);
-	player.show();
 
 	for (var i = balls.length - 1; i >= 0; i--) {
-		balls[i].show()
-		balls[i].update()
+		balls[i].show();
+		balls[i].update();
 		if (balls[i].hitFloor()) {
 			balls[i].bounce(balls[i].r);
 		}
 		if (balls[i].hitEdge()) {
 			balls[i].bounceEdge();
 		}
+
+		if (arrows[arrows.length - 1] && balls[i].intersects(arrows[arrows.length - 1])) {
+			arrows[arrows.length - 1].active = false
+			arrows.splice(arrows.length - 1, 1);
+			balls[i].r *= .5;
+		}
 	}
+
+	if (arrows[arrows.length - 1] && arrows[arrows.length - 1].active) {
+		arrows[arrows.length - 1].update();
+		arrows[arrows.length - 1].show();		
+	}
+
+	player.show();
 
 	if (keyIsDown(LEFT_ARROW)) {
 		player.move(LEFT);
@@ -35,16 +49,13 @@ function draw() {
 		player.move(RIGHT);		
 	}
 
-	player.update()
-
+	player.update();
 }
 
-// function keyPressed() {
-// 	if (keyCode === LEFT_ARROW){
-// 		console.log('left');
-// 		player.move(LEFT);
-// 	} else if (keyCode == RIGHT_ARROW) {
-// 		console.log('right');
-// 		player.move(RIGHT);
-// 	}
-// }
+function keyPressed() {
+	if (keyCode === UP_ARROW){
+		if (arrows[arrows.length - 1] === undefined || !arrows[arrows.length - 1].active) {
+			arrows.push(new Arrow(player.pos.x, height));
+		}
+	}
+}
