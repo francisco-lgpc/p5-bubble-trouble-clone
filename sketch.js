@@ -1,11 +1,11 @@
 var LEFT  = 0;
 var RIGHT = 1;
-var SPACE_BAR = 32;
 var ENTER = 13;
+var SPACE_BAR = 32;
 
 var gameOver = false;
 var gameWon  = false;
-var score = 0;
+var score    = 0;
 
 var player;
 var balls;
@@ -80,18 +80,7 @@ function restarGame() {
 function draw() {
 	if (gameOver) {
 		restarGameButton.show();
-
-		textSize(43);
-		textStyle(BOLD);
-		fill(255);
-		noStroke();
-		if(gameWon) {
-			drawCenterText('Well Done!', 500);
-			drawCenterText('You scored ' + score, 560);
-		} else {
-			drawCenterText('GAME OVER!', 500);
-			drawCenterText('You scored ' + score, 560);			
-		}
+		showGameOverText();
 	} else {
 		background(0, 77, 111);
 
@@ -99,16 +88,11 @@ function draw() {
 		removeInactiveArrows();
 
 		for (var i = balls.length - 1; i >= 0; i--) {
-			if (balls[i].hitFloor()) {
-				balls[i].bounce(balls[i].r);
-			}
-			if (balls[i].hitEdge()) {
-				balls[i].bounceEdge();
-			}
 			if (balls[i].intersects(player)) {
 				gameOver = true;
 				balls[i].strokeColor = color(255, 0, 0);
 			}
+
 			balls[i].show();
 			balls[i].update();
 
@@ -204,6 +188,20 @@ function playerShootingAnimation() {
 			player.shooting = false;
 		}
 		countShootingFrames++;
+	}
+}
+
+function showGameOverText() {
+	textSize(43);
+	textStyle(BOLD);
+	fill(255);
+	noStroke();
+	if(gameWon) {
+		drawCenterText('Well Done!', 500);
+		drawCenterText('You scored ' + score, 560);
+	} else {
+		drawCenterText('GAME OVER!', 500);
+		drawCenterText('You scored ' + score, 560);			
 	}
 }
 

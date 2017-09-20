@@ -11,10 +11,13 @@ function Ball(x, y, r, vx, vy) {
 	this.update = function () {
 		this.pos.add(this.vel);
 		this.vel.add(this.acc);		
+
+		if (this.hitFloor()) { this.bounce() }
+		if (this.hitEdge() ) { this.bounceEdge() }
 	}
 
-	this.bounce = function(r) {
-		this.vel.y = -r * 0.07 - 3.5;
+	this.bounce = function() {
+		this.vel.y = -this.r * 0.07 - 3.5;
 	}
 
 	this.bounceEdge = function () {
