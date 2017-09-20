@@ -12,6 +12,8 @@ var level;
 var player;
 var balls;
 var arrows;
+var powers;
+var activeArrowLimit;;
 
 var restarGameButton;
 var levelsRadio;
@@ -26,6 +28,7 @@ var slideLeft;
 var walkRight = [];
 var walkLeft = [];
 var bubble;
+var doubleArrows;
 
 function preload(){
 	idle         = loadImage('assets/adventurer_idle.png');
@@ -38,6 +41,7 @@ function preload(){
 	walkLeft[0]  = loadImage('assets/adventurer_walk_left_1.png');
 	walkLeft[1]  = loadImage('assets/adventurer_walk_left_2.png');
 	bubble       = loadImage('assets/bubble.png');
+	doubleArrows = loadImage('assets/arrows.png');
 }
 
 function setup() {
@@ -56,7 +60,10 @@ function restarGame() {
 	score    = 0
 	balls    = []
 	arrows   = []
+	powers   = []
 	player   = new Player();
+	
+	activeArrowLimit = 1;
 	
 	level = int(levelsRadio.value());		
 	generateBalls(); // refer to generateBalls.js file
@@ -71,9 +78,12 @@ function nextLevel() {
 	levelPassed = false
 	balls       = []
 	arrows      = []
+	powers      = []
 	player      = new Player();
 
-	level++
+	activeArrowLimit = 1;
+
+	level++;
 	generateBalls(); // refer to generateBalls.js file
 	
 	nextLevelButton.hide();	
@@ -106,15 +116,36 @@ function draw() {
 			balls[i].show();
 			balls[i].update();
 
-			if (arrows[arrows.length - 1] && arrows[arrows.length - 1].intersects(balls[i])) {
-				score += balls[i].r * 4;
-				arrows[arrows.length - 1].active = false
-				if (balls[i].r > 6.25) {
-					balls.push(new Ball(balls[i].pos.x, balls[i].pos.y, balls[i].r * .5,  1, -3));
-					balls.push(new Ball(balls[i].pos.x, balls[i].pos.y, balls[i].r * .5, -1, -3));
+			for (var j = arrows.length - 1; j >= 0; j--) {
+				if (arrows[j].intersects(balls[i])) {
+					score += balls[i].r * 4;
+					arrows[j].active = false
+					if (balls[i].r > 6.25) {
+						balls.push(new Ball(balls[i].pos.x, balls[i].pos.y, balls[i].r * .5,  1, -3));
+						balls.push(new Ball(balls[i].pos.x, balls[i].pos.y, balls[i].r * .5, -1, -3));
+					}
+					balls.splice(i, 1);
+					break;
 				}
-				balls.splice(i, 1);
 			}
+		}
+
+		if (random() < .0006) {
+			powers.push(new Power(random(width), height - 30, 1));
+		}
+
+		for (var i = powers.length - 1; i >= 0; i--) {
+			if (player.intersects(powers[i])) {
+				powers[i].active = true;
+				powers[i].hidden = true;
+			}
+
+			if (powers[i].active && powers[i].type === 1) {
+				activeArrowLimit++;
+			} else {
+				activeArrowLimit = 1;				
+			}
+			powers[i].show();
 		}
 
 		updateAndShowArrows();
@@ -131,7 +162,7 @@ function draw() {
 
 function keyPressed() {
 	if (keyCode === UP_ARROW){
-		if (arrows[arrows.length - 1] === undefined || !arrows[arrows.length - 1].active) {
+		if (countActiveArrows() < activeArrowLimit) {
 			var shootingOffset;
 			if (player.vel.x >= 0) {
 				shootingOffset = 30;
@@ -188,10 +219,18 @@ function removeInactiveArrows() {
 	}
 }
 
+function countActiveArrows() {
+	var count = 0;
+	for (var i = arrows.length - 1; i >= 0; i--) {
+		if (arrows[i].active) { count++ } 
+	}
+	return count;
+}
+
 function updateAndShowArrows() {
-	if (arrows[arrows.length - 1]) {
-		arrows[arrows.length - 1].update();
-		arrows[arrows.length - 1].show();		
+	for (var i = arrows.length - 1; i >= 0; i--) {
+		arrows[i].update();
+		arrows[i].show();
 	}
 }
 
