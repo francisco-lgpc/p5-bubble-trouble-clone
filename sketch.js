@@ -4,6 +4,7 @@ var SPACE_BAR = 32;
 var ENTER = 13;
 
 var gameOver = false;
+var gameWon  = false;
 var score = 0;
 
 var player;
@@ -62,13 +63,15 @@ function setup() {
 
 function restarGame() {
 	gameOver = false;
-	balls = []
-	arrows = []
-	player = new Player();
+	score    = 0
+	balls    = []
+	arrows   = []
+	player   = new Player();
+	
 	numberOfBalls = numberOfBallsRadio.value();		
 
 	for (var i = 0; i < numberOfBalls; i++) {
-		balls.push(new Ball(100 + i * (width/numberOfBalls), 100, 100, (-1)**i));
+		balls.push(new Ball(100 + i * (width/numberOfBalls), 100, 12.5, (-1)**i));
 	}	
 
 	restarGameButton.hide();
@@ -77,9 +80,20 @@ function restarGame() {
 function draw() {
 	if (gameOver) {
 		restarGameButton.show();
+		if(gameWon) {
+			textSize(43);
+			textStyle(BOLD);
+			fill(255);
+			drawCenterText('Well Done!', 500);
+			drawCenterText('You scored ' + score, 560);
+		}
 	} else {
-
 		background(0, 77, 111);
+		if (balls.length === 0) {
+			gameWon  = true;
+			gameOver = true;
+		}
+
 		for (var i = arrows.length - 1; i >= 0; i--) {
 			if (arrows[i].active == false) {
 				arrows.splice(i, 1);
@@ -163,4 +177,8 @@ function keyPressed() {
 	if (gameOver && (keyCode === SPACE_BAR || keyCode === ENTER)) {
 		restarGame();
 	}
+}
+
+function drawCenterText(string, y) {
+	text(string, (width - textWidth(string))/2, y)
 }
