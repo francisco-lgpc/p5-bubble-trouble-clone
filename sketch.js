@@ -80,12 +80,16 @@ function restarGame() {
 function draw() {
 	if (gameOver) {
 		restarGameButton.show();
+
+		textSize(43);
+		textStyle(BOLD);
+		fill(255);
 		if(gameWon) {
-			textSize(43);
-			textStyle(BOLD);
-			fill(255);
 			drawCenterText('Well Done!', 500);
 			drawCenterText('You scored ' + score, 560);
+		} else {
+			drawCenterText('GAME OVER!', 500);
+			drawCenterText('You scored ' + score, 560);			
 		}
 	} else {
 		background(0, 77, 111);
