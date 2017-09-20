@@ -4,6 +4,7 @@ var SPACE_BAR = 32;
 var ENTER = 13;
 
 var gameOver = false;
+var score = 0;
 
 var player;
 var balls;
@@ -100,6 +101,7 @@ function draw() {
 			balls[i].update();
 
 			if (arrows[arrows.length - 1] && arrows[arrows.length - 1].intersects(balls[i])) {
+				score += balls[i].r * 4;
 				arrows[arrows.length - 1].active = false
 				if (balls[i].r > 6.25) {
 					balls.push(new Ball(balls[i].pos.x, balls[i].pos.y, balls[i].r * .5,  1, -3));
@@ -113,7 +115,6 @@ function draw() {
 			arrows[arrows.length - 1].update();
 			arrows[arrows.length - 1].show();		
 		}
-
 		
 		if(player.shooting) {
 			if(countShootingFrames > 5) {
@@ -121,7 +122,6 @@ function draw() {
 			}
 			countShootingFrames++;
 		}
-
 
 		player.show();
 
@@ -138,6 +138,11 @@ function draw() {
 		}
 		player.update();
 	}
+	textSize(32);
+	textStyle(BOLD);
+	fill(255);
+	text("Score: " + score, 30, 50);
+
 }
 
 function keyPressed() {
