@@ -1,5 +1,6 @@
 var LEFT  = 0;
 var RIGHT = 1
+var SPACE_BAR = 32
 
 var gameOver = false
 
@@ -11,7 +12,28 @@ var restarGameButton;
 var numberOfBallsRadio;
 var numberOfBalls;
 
+var countShootingFrames = 0;
+
+var idle;
+var slideRight;
+var slideLeft;
+var walkRight = [];
+var walkLeft = [];
+
+function preload(){
+	idle = loadImage('assets/adventurer_idle.png')
+	shootRight = loadImage('assets/adventurer_shoot_right.png')
+	shootLeft = loadImage('assets/adventurer_shoot_left.png')
+	slideRight = loadImage('assets/adventurer_slide_right.png')
+	slideLeft = loadImage('assets/adventurer_slide_left.png')
+	walkRight[0] = loadImage('assets/adventurer_walk_right_1.png')
+	walkRight[1] = loadImage('assets/adventurer_walk_right_2.png')
+	walkLeft[0] = loadImage('assets/adventurer_walk_left_1.png')
+	walkLeft[1] = loadImage('assets/adventurer_walk_left_2.png')
+}
+
 function setup() {
+	//frameRate(5);
 	wrapperCanvas = select('.wrapper-canvas');
 	var canvas = createCanvas(1600, 800).class('canvas');
 	canvas.parent(wrapperCanvas);
@@ -91,6 +113,14 @@ function draw() {
 		}
 
 		
+		if(player.shooting) {
+			if(countShootingFrames > 5) {
+				player.shooting = false;
+			}
+			countShootingFrames++;
+		}
+
+
 		player.show();
 
 		if (keyIsDown(LEFT_ARROW)) {
@@ -99,6 +129,11 @@ function draw() {
 			player.move(RIGHT);		
 		}
 
+		if (keyIsDown(SPACE_BAR)) {
+			player.slide = true;
+		} else {
+			player.slide = false;
+		}
 		player.update();
 	}
 }
@@ -106,7 +141,15 @@ function draw() {
 function keyPressed() {
 	if (keyCode === UP_ARROW){
 		if (arrows[arrows.length - 1] === undefined || !arrows[arrows.length - 1].active) {
-			arrows.push(new Arrow(player.pos.x, height));
-		}
+			var shootingOffset;
+			if (player.vel.x >= 0) {
+				shootingOffset = 30;
+			} else {
+				shootingOffset = -30;
+			}
+			arrows.push(new Arrow(player.pos.x + shootingOffset, height));
+			player.shooting = true;
+			countShootingFrames = 0;
+		} 
 	}
 }

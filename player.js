@@ -4,8 +4,34 @@ function Player() {
 	this.vel = createVector(0, 0);
 	this.acc = createVector(0, 0);
 
+	this.slide = false;
+	this.shooting = false
+
 	this.color = color(30, 20, 223);
 	this.strokeColor = color(0, 0);
+
+	this.show = function() {
+		imageMode(CENTER)
+		if (this.shooting) {
+			if (this.vel.x >= 0) {
+				image(shootRight, this.pos.x, this.pos.y - 2/5 * this.r, this.r * 2 + 4/5 * this.r, this.r * 2 + 4/5 * this.r)
+			} else {
+				image(shootLeft, this.pos.x, this.pos.y - 2/5 * this.r, this.r * 2 + 4/5 * this.r, this.r * 2 + 4/5 * this.r)
+			}
+		} else if (abs(this.vel.x) < 0.5) {
+			image(idle, this.pos.x, this.pos.y - 2/5 * this.r, this.r * 2 + 4/5 * this.r, this.r * 2 + 4/5 * this.r)
+		} else if (this.vel.x < 4 && this.vel.x >= 0.5) {
+			image(walkRight[int(frameCount/15) % 2], this.pos.x, this.pos.y - 2/5 * this.r, this.r * 2 + 4/5 * this.r, this.r * 2 + 4/5 * this.r)
+		} else if (this.vel.x >= 4) {
+			image(slideRight, this.pos.x, this.pos.y - 2/5 * this.r, this.r * 2 + 4/5 * this.r, this.r * 2 + 4/5 * this.r)
+		} else if (this.vel.x > -4 && this.vel.x <= -0.5) {
+			image(walkLeft[int(frameCount/15) % 2], this.pos.x, this.pos.y - 2/5 * this.r, this.r * 2 + 4/5 * this.r, this.r * 2 + 4/5 * this.r)
+		} else if (this.vel.x <= -4) {
+			image(slideLeft, this.pos.x, this.pos.y - 2/5 * this.r, this.r * 2 + 4/5 * this.r, this.r * 2 + 4/5 * this.r)
+		}
+		// noFill()
+		// ellipse(this.pos.x, this.pos.y, this.r * 2, this.r * 2)
+	}
 
 	this.update = function () {
 		if (this.acc.x === 0 && this.vel.x !== 0) {
@@ -13,6 +39,10 @@ function Player() {
 		}
 		this.pos.add(this.vel);
 		this.vel.add(this.acc);
+
+		if (!this.slide) {
+			this.vel.x = constrain(this.vel.x, -3, 3);
+		}
 
 		this.pos.x = constrain(this.pos.x, 0 + this.r, width - this.r);
 
@@ -40,8 +70,7 @@ function Player() {
 			this.vel.mult(0);
 		} else {
 			this.vel.mult(.94);	
-		}
-		
+		}	
 	}
 
 	this.hitFloor = function () {
