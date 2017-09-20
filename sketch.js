@@ -1,8 +1,9 @@
 var LEFT  = 0;
-var RIGHT = 1
-var SPACE_BAR = 32
+var RIGHT = 1;
+var SPACE_BAR = 32;
+var ENTER = 13;
 
-var gameOver = false
+var gameOver = false;
 
 var player;
 var balls;
@@ -19,21 +20,22 @@ var slideRight;
 var slideLeft;
 var walkRight = [];
 var walkLeft = [];
+var bubble;
 
 function preload(){
-	idle = loadImage('assets/adventurer_idle.png')
-	shootRight = loadImage('assets/adventurer_shoot_right.png')
-	shootLeft = loadImage('assets/adventurer_shoot_left.png')
-	slideRight = loadImage('assets/adventurer_slide_right.png')
-	slideLeft = loadImage('assets/adventurer_slide_left.png')
-	walkRight[0] = loadImage('assets/adventurer_walk_right_1.png')
-	walkRight[1] = loadImage('assets/adventurer_walk_right_2.png')
-	walkLeft[0] = loadImage('assets/adventurer_walk_left_1.png')
-	walkLeft[1] = loadImage('assets/adventurer_walk_left_2.png')
+	idle         = loadImage('assets/adventurer_idle.png');
+	shootRight   = loadImage('assets/adventurer_shoot_right.png');
+	shootLeft    = loadImage('assets/adventurer_shoot_left.png');
+	slideRight   = loadImage('assets/adventurer_slide_right.png');
+	slideLeft    = loadImage('assets/adventurer_slide_left.png');
+	walkRight[0] = loadImage('assets/adventurer_walk_right_1.png');
+	walkRight[1] = loadImage('assets/adventurer_walk_right_2.png');
+	walkLeft[0]  = loadImage('assets/adventurer_walk_left_1.png');
+	walkLeft[1]  = loadImage('assets/adventurer_walk_left_2.png');
+	bubble       = loadImage('assets/bubble.png');
 }
 
 function setup() {
-	//frameRate(5);
 	wrapperCanvas = select('.wrapper-canvas');
 	var canvas = createCanvas(1600, 800).class('canvas');
 	canvas.parent(wrapperCanvas);
@@ -75,8 +77,8 @@ function draw() {
 	if (gameOver) {
 		restarGameButton.show();
 	} else {
-		background(125);
 
+		background(0, 77, 111);
 		for (var i = arrows.length - 1; i >= 0; i--) {
 			if (arrows[i].active == false) {
 				arrows.splice(i, 1);
@@ -151,5 +153,9 @@ function keyPressed() {
 			player.shooting = true;
 			countShootingFrames = 0;
 		} 
+	}
+
+	if (gameOver && (keyCode === SPACE_BAR || keyCode === ENTER)) {
+		restarGame();
 	}
 }

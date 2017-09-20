@@ -6,11 +6,11 @@ function Arrow(x, y) {
 	this.active = true
 
 	this.show = function() {
-		stroke(255, 0, 0);
+		stroke(46, 139, 87);
 		strokeWeight(4);
 		line(this.pos.x, this.initialPos.y, this.pos.x, this.pos.y);
 
-		fill(255, 0, 0);
+		fill(46, 139, 87);
 		triangle(
 			this.pos.x,          this.pos.y - this.r, 
 			this.pos.x + this.r, this.pos.y + this.r, 

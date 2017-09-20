@@ -4,6 +4,10 @@ function Ball(x, y, r, vx, vy) {
 	this.vel = createVector(vx, vy);
 	this.acc = createVector(0, 0.1);
 
+	this.show = function () {
+		image(bubble, this.pos.x, this.pos.y, this.r*2, this.r*2);
+	}
+
 	this.update = function () {
 		this.pos.add(this.vel);
 		this.vel.add(this.acc);		
