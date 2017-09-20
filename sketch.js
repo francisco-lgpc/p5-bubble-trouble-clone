@@ -6,6 +6,7 @@ var SPACE_BAR = 32;
 var gameOver = false;
 var gameWon  = false;
 var score    = 0;
+var level;
 
 var player;
 var balls;
@@ -47,7 +48,7 @@ function setup() {
 	restarGameButton.mouseClicked(restarGame);
 
 	var div = createDiv('').class('wrapper');
-	createElement('h2','Select the Number of Balls').parent(div);
+	createElement('h2','Levels').parent(div);
 
 
 	numberOfBallsRadio = createRadio();
@@ -68,12 +69,9 @@ function restarGame() {
 	arrows   = []
 	player   = new Player();
 	
-	numberOfBalls = numberOfBallsRadio.value();		
-
-	for (var i = 0; i < numberOfBalls; i++) {
-		balls.push(new Ball(100 + i * (width/numberOfBalls), 100, 100, (-1)**i));
-	}	
-
+	level = int(numberOfBallsRadio.value());		
+	generateBalls(); // refer to generateBalls.js file
+	
 	restarGameButton.hide();
 }
 
@@ -116,6 +114,7 @@ function draw() {
 	}
 
 	showScore();
+	showLevel();
 }
 
 function keyPressed() {
@@ -180,6 +179,14 @@ function showScore() {
 	fill(255);
 	noStroke();
 	text("Score: " + score, 30, 50);
+}
+
+function showLevel() {
+	textSize(32);
+	textStyle(BOLD);
+	fill(255);
+	noStroke();
+	text("Level: " + level, width - textWidth("Level: " + level) - 30, 50);
 }
 
 function playerShootingAnimation() {
