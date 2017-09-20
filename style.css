@@ -17,12 +17,20 @@ body {
 	position: relative;
 }
 
-.btn-restart {
+.btn {
 	position: absolute;
-	top: calc(33% - 10px);%;
+	top: calc(50% - 10px);
 	left: calc(50% - 150px);
 	width: 300px;
 	padding: 20px;
+}
+
+.btn-select-level {
+	top: calc(40% - 10px);
+}
+
+.btn-restart {
+	top: calc(25% - 10px);
 }
 
 .canvas {

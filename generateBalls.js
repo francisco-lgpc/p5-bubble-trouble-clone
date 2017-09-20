@@ -1,5 +1,6 @@
 function generateBalls() {
 	var ballSize;
+	var numberOfBalls;
 	switch (level) {
     case 1:
 			numberOfBalls = 1;
