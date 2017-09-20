@@ -71,7 +71,7 @@ function restarGame() {
 	numberOfBalls = numberOfBallsRadio.value();		
 
 	for (var i = 0; i < numberOfBalls; i++) {
-		balls.push(new Ball(100 + i * (width/numberOfBalls), 100, 12.5, (-1)**i));
+		balls.push(new Ball(100 + i * (width/numberOfBalls), 100, 100, (-1)**i));
 	}	
 
 	restarGameButton.hide();
@@ -84,6 +84,7 @@ function draw() {
 		textSize(43);
 		textStyle(BOLD);
 		fill(255);
+		noStroke();
 		if(gameWon) {
 			drawCenterText('Well Done!', 500);
 			drawCenterText('You scored ' + score, 560);
@@ -93,16 +94,9 @@ function draw() {
 		}
 	} else {
 		background(0, 77, 111);
-		if (balls.length === 0) {
-			gameWon  = true;
-			gameOver = true;
-		}
 
-		for (var i = arrows.length - 1; i >= 0; i--) {
-			if (arrows[i].active == false) {
-				arrows.splice(i, 1);
-			}
-		}
+		checkGameWon();
+		removeInactiveArrows();
 
 		for (var i = balls.length - 1; i >= 0; i--) {
 			if (balls[i].hitFloor()) {
@@ -129,38 +123,15 @@ function draw() {
 			}
 		}
 
-		if (arrows[arrows.length - 1]) {
-			arrows[arrows.length - 1].update();
-			arrows[arrows.length - 1].show();		
-		}
-		
-		if(player.shooting) {
-			if(countShootingFrames > 5) {
-				player.shooting = false;
-			}
-			countShootingFrames++;
-		}
+		updateAndShowArrows();
+		playerShootingAnimation();
 
 		player.show();
-
-		if (keyIsDown(LEFT_ARROW)) {
-			player.move(LEFT);
-		} else if (keyIsDown(RIGHT_ARROW)) {
-			player.move(RIGHT);		
-		}
-
-		if (keyIsDown(SPACE_BAR)) {
-			player.slide = true;
-		} else {
-			player.slide = false;
-		}
+		checkKeyIsDown();
 		player.update();
 	}
-	textSize(32);
-	textStyle(BOLD);
-	fill(255);
-	text("Score: " + score, 30, 50);
 
+	showScore();
 }
 
 function keyPressed() {
@@ -180,6 +151,59 @@ function keyPressed() {
 
 	if (gameOver && (keyCode === SPACE_BAR || keyCode === ENTER)) {
 		restarGame();
+	}
+}
+
+function checkKeyIsDown() {
+	if (keyIsDown(LEFT_ARROW)) {
+		player.move(LEFT);
+	} else if (keyIsDown(RIGHT_ARROW)) {
+		player.move(RIGHT);		
+	}
+
+	if (keyIsDown(SPACE_BAR)) {
+		player.slide = true;
+	} else {
+		player.slide = false;
+	}
+}
+
+function checkGameWon() {
+	if (balls.length === 0) {
+		gameWon  = true;
+		gameOver = true;
+	}
+}
+
+function removeInactiveArrows() {
+	for (var i = arrows.length - 1; i >= 0; i--) {
+		if (arrows[i].active == false) {
+			arrows.splice(i, 1);
+		}
+	}
+}
+
+function updateAndShowArrows() {
+	if (arrows[arrows.length - 1]) {
+		arrows[arrows.length - 1].update();
+		arrows[arrows.length - 1].show();		
+	}
+}
+
+function showScore() {
+	textSize(32);
+	textStyle(BOLD);
+	fill(255);
+	noStroke();
+	text("Score: " + score, 30, 50);
+}
+
+function playerShootingAnimation() {
+	if(player.shooting) {
+		if(countShootingFrames > 5) {
+			player.shooting = false;
+		}
+		countShootingFrames++;
 	}
 }
 
