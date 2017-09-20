@@ -9,6 +9,9 @@ function Power(x, y, type) {
 	  case 1:
 	  	this.img = doubleArrows;
 			break;
+	  case 2:
+	  	this.img = dynamite;
+			break;
 	}
 
 	this.show = function() {

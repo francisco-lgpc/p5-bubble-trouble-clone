@@ -16,7 +16,15 @@ function Ball(x, y, r, vx, vy) {
 		if (this.hitEdge() ) { this.bounceEdge() }
 	}
 
-	this.bounce = function() {
+	this.split = function () {
+		score += this.r * 4;
+		if (this.r > 6.25) {
+			balls.push(new Ball(this.pos.x, this.pos.y, this.r * .5,  1, -3));
+			balls.push(new Ball(this.pos.x, this.pos.y, this.r * .5, -1, -3));
+		}
+	}
+
+	this.bounce = function () {
 		this.vel.y = -this.r * 0.07 - 3.5;
 	}
 

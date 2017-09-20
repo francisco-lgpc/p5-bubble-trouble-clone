@@ -13,7 +13,8 @@ var player;
 var balls;
 var arrows;
 var powers;
-var activeArrowLimit;;
+var activeArrowLimit;
+var bombsInHand;
 
 var restarGameButton;
 var levelsRadio;
@@ -42,6 +43,7 @@ function preload(){
 	walkLeft[1]  = loadImage('assets/adventurer_walk_left_2.png');
 	bubble       = loadImage('assets/bubble.png');
 	doubleArrows = loadImage('assets/arrows.png');
+	dynamite     = loadImage('assets/dynamite.png');
 }
 
 function setup() {
@@ -64,6 +66,7 @@ function restarGame() {
 	player   = new Player();
 	
 	activeArrowLimit = 1;
+	bombsInHand      = 0;
 	
 	level = int(levelsRadio.value());		
 	generateBalls(); // refer to generateBalls.js file
@@ -82,6 +85,7 @@ function nextLevel() {
 	player      = new Player();
 
 	activeArrowLimit = 1;
+	bombsInHand      = 0;
 
 	level++;
 	generateBalls(); // refer to generateBalls.js file
@@ -118,12 +122,8 @@ function draw() {
 
 			for (var j = arrows.length - 1; j >= 0; j--) {
 				if (arrows[j].intersects(balls[i])) {
-					score += balls[i].r * 4;
 					arrows[j].active = false
-					if (balls[i].r > 6.25) {
-						balls.push(new Ball(balls[i].pos.x, balls[i].pos.y, balls[i].r * .5,  1, -3));
-						balls.push(new Ball(balls[i].pos.x, balls[i].pos.y, balls[i].r * .5, -1, -3));
-					}
+					balls[i].split();
 					balls.splice(i, 1);
 					break;
 				}
@@ -131,20 +131,24 @@ function draw() {
 		}
 
 		if (random() < .0006) {
-			powers.push(new Power(random(width), height - 30, 1));
+			powers.push(new Power(30 + random(width - 60), height - 30, int(random(2) + 1)));
 		}
 
 		for (var i = powers.length - 1; i >= 0; i--) {
 			if (player.intersects(powers[i])) {
 				powers[i].active = true;
+			}
+
+			if (powers[i].active && !powers[i].hidden && powers[i].type === 1) {
+				activeArrowLimit++;
 				powers[i].hidden = true;
 			}
 
-			if (powers[i].active && powers[i].type === 1) {
-				activeArrowLimit++;
-			} else {
-				activeArrowLimit = 1;				
+			if (powers[i].active && !powers[i].hidden && powers[i].type === 2) {
+				bombsInHand++;
+				powers[i].hidden = true;
 			}
+
 			powers[i].show();
 		}
 
@@ -173,6 +177,14 @@ function keyPressed() {
 			player.shooting = true;
 			countShootingFrames = 0;
 		} 
+	}
+
+	if (keyCode === SPACE_BAR && keyIsDown(17)) {
+		if (bombsInHand > 0) {
+			triggerExplosion();
+			bombsInHand--;
+		}
+
 	}
 
 	if (keyCode === SPACE_BAR || keyCode === ENTER) {
@@ -208,6 +220,17 @@ function checkGameWon() {
 	if (levelPassed && level === 10) {
 		gameWon  = true;
 		gameOver = true;
+	}
+}
+
+function triggerExplosion() {
+	for (var i = balls.length - 1; i >= 0; i--) {
+		console.log(balls[i].pos.dist(player.pos));
+		if(balls[i].pos.dist(player.pos) < balls[i].r + 200) {
+			balls[i]
+			balls[i].split();
+			balls.splice(i, 1);
+		}
 	}
 }
 
