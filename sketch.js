@@ -153,7 +153,7 @@ function keyPressed() {
 		} 
 	}
 
-	if (keyCode === CTRL && bombsInHand > 0) {
+	if (keyCode === CTRL && bombsInHand > 0 && !gameOver && !levelPassed) {
 		triggerExplosion();
 		bombsInHand--;
 	}
