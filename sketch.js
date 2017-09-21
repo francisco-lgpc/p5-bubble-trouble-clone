@@ -108,7 +108,6 @@ function selectLevel() {
 }
 
 function draw() {
-
 	if (gameOver) {
 		restarGameButton.show();
 		selectLevelButton.show();
@@ -121,53 +120,16 @@ function draw() {
 		checkLevelPassed();
 		removeInactiveArrows();
 
-		for (var i = balls.length - 1; i >= 0; i--) {
-			if (balls[i].intersects(player)) {
-				gameOver = true;
-				balls[i].strokeColor = color(255, 0, 0);
-			}
+		showAndUpdate(balls);
 
-			balls[i].show();
-			balls[i].update();
+		generatePowersRandomly(0.0006);
 
-			for (var j = arrows.length - 1; j >= 0; j--) {
-				if (arrows[j].intersects(balls[i])) {
-					arrows[j].active = false
-					balls[i].split();
-					balls.splice(i, 1);
-					break;
-				}
-			}
-		}
+		showAndUpdate(powers);
+		showAndUpdate(arrows);
+		showAndUpdate([player]);
 
-		if (random() < .0006) {
-			powers.push(new Power(30 + random(width - 60), height - 30, int(random(2) + 1)));
-		}
-
-		for (var i = powers.length - 1; i >= 0; i--) {
-			if (player.intersects(powers[i])) {
-				powers[i].active = true;
-			}
-
-			if (powers[i].active && !powers[i].hidden && powers[i].type === 1) {
-				activeArrowLimit++;
-				powers[i].hidden = true;
-			}
-
-			if (powers[i].active && !powers[i].hidden && powers[i].type === 2) {
-				bombsInHand++;
-				powers[i].hidden = true;
-			}
-
-			powers[i].show();
-		}
-
-		updateAndShowArrows();
 		playerShootingAnimation();
-
-		player.show();
 		checkKeyIsDown();
-		player.update();
 	}
 	explosionAnimation();
 	
@@ -273,10 +235,16 @@ function countActiveArrows() {
 	return count;
 }
 
-function updateAndShowArrows() {
-	for (var i = arrows.length - 1; i >= 0; i--) {
-		arrows[i].update();
-		arrows[i].show();
+function generatePowersRandomly(prob) {
+	if (random() < prob) {
+		powers.push(new Power(30 + random(width - 60), height - 30, int(random(2) + 1)));
+	}
+}
+
+function showAndUpdate(array) {
+	for (var i = array.length - 1; i >= 0; i--) {
+		array[i].show();
+		array[i].update();
 	}
 }
 

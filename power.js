@@ -22,6 +22,18 @@ function Power(x, y, type) {
 	}
 
 	this.update = function() {
+		if (player.intersects(this)) {
+			this.active = true;
+		}
 
+		if (this.active && !this.hidden && this.type === 1) {
+			activeArrowLimit++;
+			this.hidden = true;
+		}
+
+		if (this.active && !this.hidden && this.type === 2) {
+			bombsInHand++;
+			this.hidden = true;
+		}
 	}
 }

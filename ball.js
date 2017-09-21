@@ -14,6 +14,20 @@ function Ball(x, y, r, vx, vy) {
 
 		if (this.hitFloor()) { this.bounce() }
 		if (this.hitEdge() ) { this.bounceEdge() }
+
+		if (this.intersects(player)) {
+			gameOver = true;
+			this.strokeColor = color(255, 0, 0);
+		}
+
+		for (var j = arrows.length - 1; j >= 0; j--) {
+			if (arrows[j].intersects(this)) {
+				arrows[j].active = false
+				this.split();
+				balls.splice(balls.indexOf(this), 1);
+				break;
+			}
+		}
 	}
 
 	this.split = function () {
