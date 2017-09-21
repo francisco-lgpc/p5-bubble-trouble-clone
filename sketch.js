@@ -1,6 +1,7 @@
 var LEFT  = 0;
 var RIGHT = 1;
 var ENTER = 13;
+var CTRL  = 17;
 var SPACE_BAR = 32;
 
 var gameOver    = false;
@@ -13,6 +14,7 @@ var player;
 var balls;
 var arrows;
 var powers;
+var explosions;
 var activeArrowLimit;
 var bombsInHand;
 
@@ -30,6 +32,8 @@ var walkRight = [];
 var walkLeft = [];
 var bubble;
 var doubleArrows;
+var dynamite;
+var explosion = [];
 
 function preload(){
 	idle         = loadImage('assets/adventurer_idle.png');
@@ -44,6 +48,10 @@ function preload(){
 	bubble       = loadImage('assets/bubble.png');
 	doubleArrows = loadImage('assets/arrows.png');
 	dynamite     = loadImage('assets/dynamite.png');
+
+	for (var i = 16; i > 0; i--) {
+		explosion[i] = loadImage('assets/explosion/explosion_' + i + '.png');		
+	}
 }
 
 function setup() {
@@ -58,12 +66,13 @@ function setup() {
 }
 
 function restarGame() {
-	gameOver = false;
-	score    = 0
-	balls    = []
-	arrows   = []
-	powers   = []
-	player   = new Player();
+	gameOver   = false;
+	score      = 0
+	balls      = []
+	arrows     = []
+	powers     = []
+	explosions = []
+	player     = new Player();
 	
 	activeArrowLimit = 1;
 	bombsInHand      = 0;
@@ -82,6 +91,7 @@ function nextLevel() {
 	balls       = []
 	arrows      = []
 	powers      = []
+	explosions  = []
 	player      = new Player();
 
 	activeArrowLimit = 1;
@@ -98,6 +108,7 @@ function selectLevel() {
 }
 
 function draw() {
+
 	if (gameOver) {
 		restarGameButton.show();
 		selectLevelButton.show();
@@ -106,7 +117,6 @@ function draw() {
 		nextLevelButton.show();
 	} else {
 		background(0, 77, 111);
-
 		checkGameWon();
 		checkLevelPassed();
 		removeInactiveArrows();
@@ -159,7 +169,8 @@ function draw() {
 		checkKeyIsDown();
 		player.update();
 	}
-
+	explosionAnimation();
+	
 	showScore();
 	showLevel();
 }
@@ -179,12 +190,9 @@ function keyPressed() {
 		} 
 	}
 
-	if (keyCode === SPACE_BAR && keyIsDown(17)) {
-		if (bombsInHand > 0) {
-			triggerExplosion();
-			bombsInHand--;
-		}
-
+	if (keyCode === CTRL && bombsInHand > 0) {
+		triggerExplosion();
+		bombsInHand--;
 	}
 
 	if (keyCode === SPACE_BAR || keyCode === ENTER) {
@@ -224,12 +232,26 @@ function checkGameWon() {
 }
 
 function triggerExplosion() {
+	explosions.push({ frame: 16, pos: player.pos.copy() })
 	for (var i = balls.length - 1; i >= 0; i--) {
-		console.log(balls[i].pos.dist(player.pos));
-		if(balls[i].pos.dist(player.pos) < balls[i].r + 200) {
+		if(balls[i].pos.dist(player.pos) < balls[i].r + 150) {
 			balls[i]
 			balls[i].split();
 			balls.splice(i, 1);
+		}
+	}
+}
+
+function explosionAnimation() {
+	for (var i = explosions.length - 1; i >= 0; i--) {
+		if (explosions[i].frame > 0) {
+			image(explosion[explosions[i].frame], explosions[i].pos.x, explosions[i].pos.y, 400, 400);
+
+			if (frameCount % 3 === 0 || explosions[i].frame > 6) {
+				explosions[i].frame--;
+			}
+		} else {
+			explosions.splice(i, 1);
 		}
 	}
 }
