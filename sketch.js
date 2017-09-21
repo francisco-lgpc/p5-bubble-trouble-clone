@@ -172,6 +172,7 @@ function draw() {
 	explosionAnimation();
 	
 	showScore();
+	showPowerSummary();
 	showLevel();
 }
 
@@ -293,6 +294,20 @@ function showLevel() {
 	fill(255);
 	noStroke();
 	text("Level: " + level, width - textWidth("Level: " + level) - 30, 50);
+}
+
+function showPowerSummary() {
+	textSize(32);
+	textStyle(NORMAL);
+	fill(255);
+	noStroke();
+	image(dynamite, 270, 35, 40, 40)
+	text('x ', 290, 48);	
+	text(bombsInHand, 315, 50);
+
+	image(doubleArrows, 390, 35, 40, 40)
+	text('x ', 410, 48);	
+	text(activeArrowLimit, 435, 50);
 }
 
 function playerShootingAnimation() {
