@@ -40,3 +40,58 @@ body {
 input {
 	margin-left: 30px;
 }
+
+.start-menu-wrapper {
+	position: absolute;
+	width: 80%;
+	height: 70%;
+	top: 15%;
+}
+
+.start-menu {
+	position: relative;
+	width: 80%;
+	height: 100%;
+	margin: auto;
+	text-align: center;
+	vertical-align: middle;
+}
+
+.level-choice {
+	display: flex;
+	justify-content: center;
+}
+
+.level-tag {
+	position: relative;
+}
+
+.level-tag > .tag {
+	margin: 10% 0;
+	height: 60%;
+	width: 80%;
+}
+
+.level-tag > p {
+	position: absolute;
+	top: 4.5vh;
+	left: calc(50% - 34px);
+	color: white;
+	font-size: 30px;
+	font-weight: bold;
+}
+
+.level-display {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+  justify-content: center;
+}
+
+.level-display > img {
+	width: 30px;
+} 
+
+.level-display > img.tag-circle {
+	width: 70px;
+} 
