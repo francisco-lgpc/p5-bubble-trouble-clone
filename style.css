@@ -55,43 +55,48 @@ input {
 	margin: auto;
 	text-align: center;
 	vertical-align: middle;
-}
-
-.level-choice {
 	display: flex;
 	justify-content: center;
 }
 
-.level-tag {
-	position: relative;
+.start-menu-item {
+	margin: 0 15px;
+	display: flex;
+	flex-direction: column;
+  justify-content: center;
 }
 
-.level-tag > .tag {
-	margin: 10% 0;
-	height: 60%;
-	width: 80%;
+.btn-start {
+	width: 120px;
 }
 
-.level-tag > p {
-	position: absolute;
-	top: 4.5vh;
-	left: calc(50% - 34px);
-	color: white;
-	font-size: 30px;
-	font-weight: bold;
-}
-
-.level-display {
+.wrapper-level {
 	display: flex;
 	flex-direction: column;
 	align-items: center;
   justify-content: center;
+	position: relative;
 }
 
-.level-display > img {
+.wrapper-level > img {
 	width: 30px;
 } 
 
-.level-display > img.tag-circle {
-	width: 70px;
-} 
+.wrapper-level > .level {
+	margin: 0;
+	height: 45px;
+}
+
+.wrapper-level > .level > img.tag-circle {
+	width: 100px;
+	height: 100%;
+}
+
+.wrapper-level > .level > p.level-text {
+	color: white;
+	font-weight: bold;
+	font-size: 20px;
+	position: absolute;
+	top: 21px;
+	right: 20px;
+}
