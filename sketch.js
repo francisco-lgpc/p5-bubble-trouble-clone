@@ -4,26 +4,31 @@ var ENTER = 13;
 var CTRL  = 17;
 var SPACE_BAR = 32;
 
-var gameOver    = false;
-var gameWon     = false;
-var levelPassed = false
-var score       = 0;
-var level;
+var gameOver      = false;
+var gameWon       = false;
+var levelPassed   = false
+var startGameView = true;
+var score         = 0;
+var level         = 1;
 
 var player;
-var balls;
-var arrows;
-var powers;
-var explosions;
-var activeArrowLimit;
-var bombsInHand;
+var balls      = [];
+var arrows     = [];
+var powers     = [];
+var explosions = [];
+
+var activeArrowLimit = 1;
+var bombsInHand      = 0;
 
 var restarGameButton;
-var levelsRadio;
-var wrapperLevelsRadio;
 var wrapperCanvas;
 
-var countShootingFrames = 0;
+var increaseLevelButton;
+var decreaseLevelButton;
+
+var countShootingFrames   = 0;
+var countGameOverFrames   = 0;
+var shownNextLevelText    = false;
 
 var idle;
 var slideRight;
@@ -59,14 +64,17 @@ function setup() {
 	var canvas = createCanvas(1600, 800).class('canvas');
 	canvas.parent(wrapperCanvas);
 
-	generateButtons();
-	generateLevelsRadio();
+	imageMode(CENTER)
 
-	restarGame();
+	generateButtons();
+	wrapperLevel = select('.wrapper-level')
+	levelText    = select('.level-text')
+	startMenu    = select('.wrapper-start-menu')
 }
 
 function restarGame() {
-	gameOver   = false;
+	startGameView = false;
+
 	score      = 0
 	balls      = []
 	arrows     = []
@@ -77,13 +85,9 @@ function restarGame() {
 	activeArrowLimit = 1;
 	bombsInHand      = 0;
 	
-	level = int(levelsRadio.value());		
 	generateBalls(); // refer to generateBalls.js file
 	
-	restarGameButton.hide();
-	nextLevelButton.hide();
-	selectLevelButton.hide();	
-	wrapperLevelsRadio.hide();
+	startMenu.hide();
 }
 
 function nextLevel() {
@@ -99,21 +103,19 @@ function nextLevel() {
 
 	level++;
 	generateBalls(); // refer to generateBalls.js file
-	
-	nextLevelButton.hide();	
-}
-
-function selectLevel() {
-	wrapperLevelsRadio.show();
 }
 
 function draw() {
 	if (gameOver) {
-		restarGameButton.show();
-		selectLevelButton.show();
-		showGameOverText();
+		showGameOver();
+	}	else if (startGameView) {
+		background(0, 77, 111);
+		startMenu.show();			
 	}	else if (levelPassed) {
-		nextLevelButton.show();
+		if (!shownNextLevelText) {
+			showNextLevelText();
+			shownNextLevelText = true;
+		}
 	} else {
 		background(0, 77, 111);
 		checkGameWon();
@@ -293,45 +295,75 @@ function showGameOverText() {
 	fill(255);
 	noStroke();
 	if(gameWon) {
-		drawCenterText('Well Done!', 500);
-		drawCenterText('You scored ' + score, 560);
+		drawCenterText('Well Done!', 370);
+		drawCenterText('You scored ' + score, 430);
 	} else {
-		drawCenterText('GAME OVER!', 500);
-		drawCenterText('You scored ' + score, 560);			
+		drawCenterText('GAME OVER!', 370);
+		drawCenterText('You scored ' + score, 430);			
 	}
 }
 
 function drawCenterText(string, y) {
-	text(string, (width - textWidth(string))/2, y)
+	text(string, (width - textWidth(string))/2, y);
 }
 
-function generateLevelsRadio() {
-	wrapperLevelsRadio = select('.wrapper-levels-radio');
-	var div = createDiv('').class('wrapper').parent(wrapperLevelsRadio);
-	createElement('h2','Levels').parent(div);
+function updateLevel(amount) {
+	return function() {
+		level += amount;
+		if (level === 0)  level = 10
+		if (level === 11) level = 1
 
-	levelsRadio = createRadio();
-	levelsRadio.class('wrapper').parent(wrapperLevelsRadio);
-	for (var i = 1; i < 11; i++) {
-		createDiv('');
-		levelsRadio.option(i, i);
+		textSize(18);
+		
+		var newText = "Level " + level
+		levelText.html(newText);
+		levelText.position((120 - textWidth(newText)) / 2, 40);
 	}
-	levelsRadio.value(1);
+}
+
+function showNextLevelText() {
+	seconds = 6
+	var interval = setInterval(function() {
+		background(0, 77, 111);
+		textSize(70)
+
+		if (seconds === 6) {
+			drawCenterText('Next Level in...', 400);
+			seconds--
+		} else if (seconds > 0) {
+			drawCenterText(seconds, 400);
+			seconds--
+		} else if (seconds === 0) {
+			drawCenterText('Go!', 400);
+			seconds--
+		} else {
+			clearInterval(interval)
+			nextLevel();
+		}
+		
+	}, 1000)
 }
 
 function generateButtons() {
 	// Restart Game Button
-	restarGameButton = createButton('Play Again').class('btn btn-restart');
-	restarGameButton.parent(wrapperCanvas);
+	restarGameButton = select('.btn-start');
 	restarGameButton.mouseClicked(restarGame);
 
-	// Restart Game Button
-	nextLevelButton = createButton('Next Level').class('btn');
-	nextLevelButton.parent(wrapperCanvas);
-	nextLevelButton.mouseClicked(nextLevel);
+	// Level Arrow Buttons
+	increaseLevelButton = select('.btn-arrow-up');
+	increaseLevelButton.mouseClicked(updateLevel(1));
+	
+	decreaseLevelButton = select('.btn-arrow-down');
+	decreaseLevelButton.mouseClicked(updateLevel(-1));
+}
 
-	// Select Leve Button
-	selectLevelButton = createButton('Select Level').class('btn btn-select-level');
-	selectLevelButton.parent(wrapperCanvas);
-	selectLevelButton.mouseClicked(selectLevel);
+function showGameOver() {	
+	showGameOverText();
+	countGameOverFrames++;
+	if (countGameOverFrames > 150) {
+		startGameView = true
+		gameOver      = false;
+
+		countGameOverFrames = 0
+	}
 }

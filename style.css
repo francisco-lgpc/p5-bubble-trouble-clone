@@ -41,7 +41,7 @@ input {
 	margin-left: 30px;
 }
 
-.start-menu-wrapper {
+.wrapper-start-menu {
 	position: absolute;
 	width: 80%;
 	height: 70%;
@@ -68,6 +68,7 @@ input {
 
 .btn-start {
 	width: 120px;
+	cursor: pointer;
 }
 
 .wrapper-level {
@@ -88,15 +89,16 @@ input {
 }
 
 .wrapper-level > .level > img.tag-circle {
-	width: 100px;
+	width: 120px;
 	height: 100%;
 }
 
 .wrapper-level > .level > p.level-text {
+	margin: 0;
 	color: white;
 	font-weight: bold;
 	font-size: 20px;
 	position: absolute;
-	top: 21px;
-	right: 20px;
+	top: 40px;
+	left: 29.48px;
 }
