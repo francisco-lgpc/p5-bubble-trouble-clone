@@ -137,13 +137,13 @@ function draw() {
 		background(0, 77, 111);
 		startMenu.show();			
 	}	else if (levelPassed) {
+		checkGameWon();
 		if (!shownNextLevelText) {
 			showNextLevelText();
 			shownNextLevelText = true;
 		}
 	} else {
 		background(0, 77, 111);
-		checkGameWon();
 		checkLevelPassed();
 		removeInactiveArrows();
 
@@ -218,6 +218,7 @@ function checkGameWon() {
 	if (levelPassed && level === 10) {
 		gameWon  = true;
 		gameOver = true;
+		shownNextLevelText = true;
 	}
 }
 
@@ -363,7 +364,11 @@ function showNextLevelText() {
 			seconds--
 		} else {
 			clearInterval(interval)
-			nextLevel();
+			shownNextLevelText = false;
+			
+			// user may already be in next level because of a keypress
+			// the next line avoids double calling nextLevel()
+			if (levelPassed) nextLevel();
 		}
 		
 	}, 1000)
