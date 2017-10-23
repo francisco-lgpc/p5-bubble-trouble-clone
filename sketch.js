@@ -59,6 +59,7 @@ function preload(){
 	}
 }
 
+var foo;
 function setup() {
 	wrapperCanvas = select('.wrapper-canvas');
 	var canvas = createCanvas(1600, 800).class('canvas');
@@ -70,6 +71,30 @@ function setup() {
 	wrapperLevel = select('.wrapper-level')
 	levelText    = select('.level-text')
 	startMenu    = select('.wrapper-start-menu')
+
+
+	var speechRec = new p5.SpeechRec('en-US');
+	speechRec.onResult   = voiceCommands
+	speechRec.continuous = true;
+	speechRec.start();
+
+	// setInterval(function() {
+	// 	console.log(speechRec.resultString);
+	// }, 1000)
+
+	function voiceCommands() {
+		console.log(speechRec.resultString);
+		// recognition system will often append words into phrases.
+		// so hack here is to only use the last word:
+		var mostRecentWord = myRec.resultString.split(' ').pop();
+		if(mostRecentWord.indexOf("left")!==-1) { 
+			move(LEFT); 
+		} else if(mostRecentWord.indexOf("right")!==-1) { 
+			move(RIGHT); 
+		}
+		console.log(mostRecentWord);
+	}
+
 }
 
 function restarGame() {
