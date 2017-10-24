@@ -10,6 +10,10 @@ function Player() {
 	this.color = color(30, 20, 223);
 	this.strokeColor = color(0, 0);
 
+	// Voice commmand properties
+	this.movingLeft  = false;
+	this.movingRight = false;
+
 	this.show = function() {
 		imageMode(CENTER)
 		if (this.shooting) {
@@ -65,12 +69,30 @@ function Player() {
 		this.vel.mult(.85);
 	}
 
+	this.stop = function() {
+		this.break();
+		this.movingRight = false
+		this.movingLeft  = false
+	}
+
 	this.drag = function() {
 		if (abs(this.vel.x) <= .05) {
 			this.vel.mult(0);
 		} else {
 			this.vel.mult(.94);	
 		}	
+	}
+
+	this.shoot = function() {
+		var shootingOffset;
+		if (this.vel.x >= 0) {
+			shootingOffset = 30;
+		} else {
+			shootingOffset = -30;
+		}
+		arrows.push(new Arrow(this.pos.x + shootingOffset, height));
+		this.shooting = true;
+		countShootingFrames = 0;
 	}
 
 	this.hitFloor = function () {

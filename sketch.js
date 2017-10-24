@@ -59,7 +59,6 @@ function preload(){
 	}
 }
 
-var foo;
 function setup() {
 	wrapperCanvas = select('.wrapper-canvas');
 	var canvas = createCanvas(1600, 800).class('canvas');
@@ -71,30 +70,6 @@ function setup() {
 	wrapperLevel = select('.wrapper-level')
 	levelText    = select('.level-text')
 	startMenu    = select('.wrapper-start-menu')
-
-
-	var speechRec = new p5.SpeechRec('en-US');
-	speechRec.onResult   = voiceCommands
-	speechRec.continuous = true;
-	speechRec.start();
-
-	// setInterval(function() {
-	// 	console.log(speechRec.resultString);
-	// }, 1000)
-
-	function voiceCommands() {
-		console.log(speechRec.resultString);
-		// recognition system will often append words into phrases.
-		// so hack here is to only use the last word:
-		var mostRecentWord = myRec.resultString.split(' ').pop();
-		if(mostRecentWord.indexOf("left")!==-1) { 
-			move(LEFT); 
-		} else if(mostRecentWord.indexOf("right")!==-1) { 
-			move(RIGHT); 
-		}
-		console.log(mostRecentWord);
-	}
-
 }
 
 function restarGame() {
@@ -113,6 +88,8 @@ function restarGame() {
 	generateBalls(); // refer to generateBalls.js file
 	
 	startMenu.hide();
+
+	listenVoiceCommands();
 }
 
 function nextLevel() {
@@ -158,6 +135,12 @@ function draw() {
 
 		playerShootingAnimation();
 		checkKeyIsDown();
+
+		if (player.movingLeft) {
+			player.move(LEFT);
+		} else if (player.movingRight) {
+			player.move(RIGHT);
+		}
 	}
 	explosionAnimation();
 	
@@ -169,15 +152,7 @@ function draw() {
 function keyPressed() {
 	if (keyCode === UP_ARROW){
 		if (countActiveArrows() < activeArrowLimit) {
-			var shootingOffset;
-			if (player.vel.x >= 0) {
-				shootingOffset = 30;
-			} else {
-				shootingOffset = -30;
-			}
-			arrows.push(new Arrow(player.pos.x + shootingOffset, height));
-			player.shooting = true;
-			countShootingFrames = 0;
+			player.shoot();
 		} 
 	}
 
@@ -206,6 +181,40 @@ function checkKeyIsDown() {
 		player.slide = true;
 	} else {
 		player.slide = false;
+	}
+}
+
+function listenVoiceCommands() {	
+	var speechRec = new p5.SpeechRec('en-US');
+	speechRec.onResult       = voiceCommands
+	speechRec.continuous     = true;
+	speechRec.interimResults = true
+	speechRec.start();
+
+	function voiceCommands() {
+		// recognition system will often append words into phrases.
+		// so hack here is to only use the last word:
+		var mostRecentWord = speechRec.resultString.split(' ').pop().toLowerCase();
+
+		if(mostRecentWord.indexOf("left")!==-1) { 
+			player.movingLeft  = true;
+			player.movingRight = false;
+		} else if(mostRecentWord.indexOf("right")!==-1) { 
+			player.movingLeft  = false; 
+			player.movingRight = true; 
+		} else if(mostRecentWord.indexOf("stop")!==-1) { 
+			player.stop(); 
+		} else if(mostRecentWord.indexOf("shoot")!==-1) { 
+			if (countActiveArrows() < activeArrowLimit) {
+				player.shoot();
+			}  
+		} else if(mostRecentWord.indexOf("boom")!==-1) { 
+			if (bombsInHand > 0 && !gameOver && !levelPassed) {
+				triggerExplosion();
+				bombsInHand--;
+			} 
+		}
+		console.log(mostRecentWord);
 	}
 }
 
