@@ -135,7 +135,8 @@ function draw() {
 		showGameOver();
 	}	else if (startGameView) {
 		background(0, 77, 111);
-		startMenu.show();			
+		startMenu.show();
+		updateLevel();		
 	}	else if (levelPassed) {
 		checkGameWon();
 		if (!shownNextLevelText) {
@@ -334,8 +335,10 @@ function drawCenterText(string, y) {
 }
 
 function updateLevel(amount) {
-	return function() {
-		level += amount;
+	// stores helper function in var 
+	// to be returned and used as a callback
+	var innerHelper = function() {
+		level += amount || 0; // increment 0 if no argument was passed
 		if (level === 0)  level = 10
 		if (level === 11) level = 1
 
@@ -345,6 +348,11 @@ function updateLevel(amount) {
 		levelText.html(newText);
 		levelText.position((120 - textWidth(newText)) / 2, 40);
 	}
+
+	// run helper if no arguments were passed
+	if (amount === undefined) innerHelper();
+
+	return innerHelper;
 }
 
 function showNextLevelText() {
@@ -352,6 +360,14 @@ function showNextLevelText() {
 	var interval = setInterval(function() {
 		background(0, 77, 111);
 		textSize(70)
+
+		// user may already be in next level because of a keypress
+		// so we must double check levelPassed
+		if (!levelPassed) {
+			clearInterval(interval)
+			shownNextLevelText = false;
+			return;
+		}
 
 		if (seconds === 6) {
 			drawCenterText('Next Level in...', 400);
@@ -364,11 +380,8 @@ function showNextLevelText() {
 			seconds--
 		} else {
 			clearInterval(interval)
-			shownNextLevelText = false;
-			
-			// user may already be in next level because of a keypress
-			// the next line avoids double calling nextLevel()
-			if (levelPassed) nextLevel();
+			shownNextLevelText = false;				
+			nextLevel();
 		}
 		
 	}, 1000)
