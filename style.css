@@ -17,6 +17,10 @@ body {
 	position: relative;
 }
 
+.command-options {
+	text-align: center;
+}
+
 .btn {
 	position: absolute;
 	top: calc(50% - 10px);

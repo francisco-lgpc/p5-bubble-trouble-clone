@@ -30,6 +30,9 @@ var countShootingFrames   = 0;
 var countGameOverFrames   = 0;
 var shownNextLevelText    = false;
 
+var listeningKeyboard = true
+var commandOptions;
+
 var idle;
 var slideRight;
 var slideLeft;
@@ -70,6 +73,11 @@ function setup() {
 	wrapperLevel = select('.wrapper-level')
 	levelText    = select('.level-text')
 	startMenu    = select('.wrapper-start-menu')
+
+	commandOptions = createRadio().class("command-options");
+
+	commandOptions.option('voice commands');
+	commandOptions.option('keyboard commands').checked = true;
 }
 
 function restarGame() {
@@ -89,7 +97,13 @@ function restarGame() {
 	
 	startMenu.hide();
 
-	listenVoiceCommands();
+	print(commandOptions.value())
+	if (commandOptions.value() === "voice commands") {
+		listenVoiceCommands();
+		listenKeyboardCommands(false);
+	} else {
+		listenKeyboardCommands(true);
+	}
 }
 
 function nextLevel() {
@@ -149,7 +163,10 @@ function draw() {
 	showLevel();
 }
 
+
 function keyPressed() {
+	if (!listeningKeyboard) return;
+
 	if (keyCode === UP_ARROW){
 		if (countActiveArrows() < activeArrowLimit) {
 			player.shoot();
@@ -171,6 +188,8 @@ function keyPressed() {
 }
 
 function checkKeyIsDown() {
+	if (!listeningKeyboard) return;
+
 	if (keyIsDown(LEFT_ARROW)) {
 		player.move(LEFT);
 	} else if (keyIsDown(RIGHT_ARROW)) {
@@ -182,6 +201,10 @@ function checkKeyIsDown() {
 	} else {
 		player.slide = false;
 	}
+}
+
+function listenKeyboardCommands(boolean) {
+	listeningKeyboard = boolean
 }
 
 function listenVoiceCommands() {	
