@@ -51,35 +51,48 @@ function listenKeyboardCommands(boolean) {
 }
 
 function listenVoiceCommands() {	
-	var speechRec = new p5.SpeechRec('en-US');
-	speechRec.onResult       = voiceCommands
-	speechRec.continuous     = true;
-	speechRec.interimResults = true
-	speechRec.start();
+	var speechRec;
+	function speechRecInit() {	
+		speechRec = new p5.SpeechRec('en-US');
+		speechRec.onResult       = voiceCommands
+		speechRec.continuous     = true;
+		speechRec.interimResults = true;
+		speechRec.start();
+	}
+
+	speechRecInit();
 
 	function voiceCommands() {
 		// recognition system will often append words into phrases.
 		// so hack here is to only use the last word:
-		var mostRecentWord = speechRec.resultString.split(' ').pop().toLowerCase();
 
-		if(mostRecentWord[0] === "le") { 
-			player.movingLeft  = true;
-			player.movingRight = false;
-		} else if(mostRecentWord[0] === "ri") { 
-			player.movingLeft  = false; 
-			player.movingRight = true; 
-		} else if(mostRecentWord[0] === "st") { 
-			player.stop(); 
-		} else if(mostRecentWord[0] === "s" && mostRecentWord[mostRecentWord.length - 1] === "t") { 
-			if (countActiveArrows() < activeArrowLimit) {
-				player.shoot();
-			}  
-		} else if(mostRecentWord[0] === "b" || mostRecentWord[mostRecentWord.length - 1] === "om") { 
+		// Exit callback if there is no value
+		if (!speechRec.resultValue) {
+			return;
+		}
+
+		var mostRecentWord = speechRec.resultString.split(' ').pop().toLowerCase();
+		speechRecInit();
+
+		if(mostRecentWord[0] === "b" || mostRecentWord.indexOf("oo") !== -1) { 
 			if (bombsInHand > 0 && !gameOver && !levelPassed) {
 				triggerExplosion();
 				bombsInHand--;
 			} 
+		} else if(mostRecentWord.slice(0, 2) === "le") { 
+			player.movingLeft  = true;
+			player.movingRight = false;
+		} else if(mostRecentWord[0] === "r" || mostRecentWord.slice(0, 2) === "wr") { 
+			player.movingLeft  = false; 
+			player.movingRight = true; 
+		} else if(mostRecentWord.slice(0, 2) === "st") { 
+			player.stop(); 
+		} else if(mostRecentWord.slice(0, 2) === "sh" || mostRecentWord.slice(0, 2) === "su") { 
+			if (countActiveArrows() < activeArrowLimit) {
+				player.shoot();
+			}  
 		}
 		console.log(mostRecentWord);
+		// console.log(mostRecentWord.slice(0, 2));
 	}
 }
