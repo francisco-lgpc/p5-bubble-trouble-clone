@@ -1,3 +1,32 @@
+function removeInactiveArrows() {
+	for (var i = arrows.length - 1; i >= 0; i--) {
+		if (arrows[i].active == false) {
+			arrows.splice(i, 1);
+		}
+	}
+}
+
+function countActiveArrows() {
+	var count = 0;
+	for (var i = arrows.length - 1; i >= 0; i--) {
+		if (arrows[i].active) { count++ } 
+	}
+	return count;
+}
+
+function generatePowersRandomly(prob) {
+	if (random() < prob) {
+		powers.push(new Power(30 + random(width - 60), height - 30, int(random(2) + 1)));
+	}
+}
+
+function showAndUpdate(array) {
+	for (var i = array.length - 1; i >= 0; i--) {
+		array[i].show();
+		array[i].update();
+	}
+}
+
 function generateBalls() {
 	var ballSize;
 	var numberOfBalls;
