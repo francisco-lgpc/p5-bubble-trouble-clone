@@ -204,7 +204,7 @@ function checkKeyIsDown() {
 }
 
 function listenKeyboardCommands(boolean) {
-	listeningKeyboard = boolean
+	listeningKeyboard = boolean;
 }
 
 function listenVoiceCommands() {	
@@ -219,19 +219,19 @@ function listenVoiceCommands() {
 		// so hack here is to only use the last word:
 		var mostRecentWord = speechRec.resultString.split(' ').pop().toLowerCase();
 
-		if(mostRecentWord.indexOf("left")!==-1) { 
+		if(mostRecentWord[0] === "le") { 
 			player.movingLeft  = true;
 			player.movingRight = false;
-		} else if(mostRecentWord.indexOf("right")!==-1) { 
+		} else if(mostRecentWord[0] === "ri") { 
 			player.movingLeft  = false; 
 			player.movingRight = true; 
-		} else if(mostRecentWord.indexOf("stop")!==-1) { 
+		} else if(mostRecentWord[0] === "st") { 
 			player.stop(); 
-		} else if(mostRecentWord.indexOf("shoot")!==-1) { 
+		} else if(mostRecentWord[0] === "s" && mostRecentWord[mostRecentWord.length - 1] === "t") { 
 			if (countActiveArrows() < activeArrowLimit) {
 				player.shoot();
 			}  
-		} else if(mostRecentWord.indexOf("boom")!==-1) { 
+		} else if(mostRecentWord[0] === "b" || mostRecentWord[mostRecentWord.length - 1] === "om") { 
 			if (bombsInHand > 0 && !gameOver && !levelPassed) {
 				triggerExplosion();
 				bombsInHand--;
