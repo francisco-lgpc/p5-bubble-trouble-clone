@@ -32,7 +32,7 @@ function restarGame() {
 	activeArrowLimit = 1;
 	bombsInHand      = 0;
 	
-	generateBalls(); // refer to generateBalls.js file
+	generateBalls();
 	
 	startMenu.hide();
 
@@ -51,7 +51,7 @@ function nextLevel() {
 	bombsInHand      = 0;
 
 	level++;
-	generateBalls(); // refer to generateBalls.js file
+	generateBalls();
 }
 
 function draw() {
